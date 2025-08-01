@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>:P</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Caveat', cursive, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            color: #5d5d5d;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+
+        .envelope-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1200px;
+        }
+
+        .envelope {
+            width: 200px;
+            height: 120px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
+        }
+
+        .envelope:hover {
+            transform: translateY(-5px);
+            filter: drop-shadow(0 8px 15px rgba(0,0,0,0.3));
+        }
+
+        .envelope-body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #f8d486;
+            border-radius: 5px;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 50% 100%, 0% 75%);
+            z-index: 1;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #f5b041;
+            border-radius: 5px;
+            clip-path: polygon(0% 0%, 100% 0%, 50% 50%);
+            transform-origin: top;
+            transform: rotateX(0deg);
+            transition: transform 0.6s ease;
+            z-index: 2;
+        }
+
+        .envelope.active .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .envelope-stamp {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #e74c3c;
+            border-radius: 50%;
+            top: 10px;
+            right: 15px;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            font-family: sans-serif;
+        }
+
+        /* Letter that appears on screen */
+        .letter-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .letter-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .letter-content {
+            background: #fff9e6;
+            width: 80%;
+            max-width: 600px;
+            min-height: 400px;
+            padding: 40px;
+            border-radius: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.3s ease 0.2s;
+            background-size: 100% 30px;
+            line-height: 30px;
+            font-size: 20px;
+        }
+
+        .letter-overlay.active .letter-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .close-letter {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .wax-seal {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #c0392b;
+            border-radius: 50%;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        /* Unique styles for each envelope */
+        .envelope:nth-child(1) .envelope-body { background: #f8d486; }
+        .envelope:nth-child(1) .envelope-flap { background: #f5b041; }
+        .envelope:nth-child(1) .envelope-stamp { background: #e74c3c; }
+
+        .envelope:nth-child(2) .envelope-body { background: #a8e6cf; }
+        .envelope:nth-child(2) .envelope-flap { background: #7acfbb; }
+        .envelope:nth-child(2) .envelope-stamp { background: #ff8b94; }
+
+        .envelope:nth-child(3) .envelope-body { background: #dcedc1; }
+        .envelope:nth-child(3) .envelope-flap { background: #b5e1a6; }
+        .envelope:nth-child(3) .envelope-stamp { background: #ffaaa5; }
+
+        .envelope:nth-child(4) .envelope-body { background: #ffd3b6; }
+        .envelope:nth-child(4) .envelope-flap { background: #ffaaa5; }
+        .envelope:nth-child(4) .envelope-stamp { background: #a8e6cf; }
+
+        .envelope:nth-child(5) .envelope-body { background: #d4a5c5; }
+        .envelope:nth-child(5) .envelope-flap { background: #c38dba; }
+        .envelope:nth-child(5) .envelope-stamp { background: #a2d4d1; }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .envelope-container {
+                gap: 20px;
+            }
+            .envelope {
+                width: 150px;
+                height: 90px;
+            }
+            .letter-content {
+                width: 90%;
+                padding: 20px;
+                min-height: 300px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>HI ^3^</h1>
+    
+    <div class="envelope-container">
+        <div class="envelope" onclick="openLetter(1)">
+            <div class="envelope-body"></div>
+            <div class="envelope-flap"></div>
+            <div class="envelope-stamp">ILY</div>
+        </div>
+        
+        <div class="envelope" onclick="openLetter(2)">
+            <div class="envelope-body"></div>
+            <div class="envelope-flap"></div>
+            <div class="envelope-stamp">ILY</div>
+        </div>
+        
+        <div class="envelope" onclick="openLetter(3)">
+            <div class="envelope-body"></div>
+            <div class="envelope-flap"></div>
+            <div class="envelope-stamp">ILY</div>
+        </div>
+        
+
+    <!-- Letter Overlays -->
+    <div class="letter-overlay" id="letter1">
+        <div class="letter-content">
+            <button class="close-letter" onclick="closeLetter()">×</button>
+            <h1>I LOVE UR PRESENCE!!</h1>
+            <p>Hi, Babi! This letter is for appreciating your presence. ^3^</p>
+            <p>Your presence brings me so much light in my world full of darkness. I feel so much joy and peace in your presence, and in your presence is where I feel like at home. </p>
+            <p>Whenever I feel your presence, is when I always feel that I'm inside your universe. This presence of yours, or rather this universe of yours pulls me out of my chaotic world, and is where I can rest freely and comfortably.</p>
+            <p>I appreaciate your presence so much, babi. I hope you can see yourself the way I see you. So, whenever you feel alone and whenever you feel that the world is against you, Let me serve as your universe too, and let our universe intertwine, So I can reciprocate the way your presence makes me feel.</p>
+            <div class="wax-seal">Seth</div>
+        </div>
+    </div>
+
+    <div class="letter-overlay" id="letter2">
+        <div class="letter-content">
+            <button class="close-letter" onclick="closeLetter()">×</button>
+            <h1>YOU'RE SO BEAUTIFUL BABI!</h1>
+            <p>You're so beautiful, both inside and out. Your beauty never fails to captivate me.</p>
+            <p>Words like pretty, beautiful, gorgeous, aren't enough to express your beauty.</p>
+            <p>"They say that the most beautiful things are not seen, but felt. But, I think you are both. Your beauty has never been a doubt to me, for both your soul and face are charming and adoring.They say that the most beautiful things are not seen, but felth. So why are you both?" This message is one of the favorite things that I've read, for how much I relate to the way I see your beauty.</p>
+            <p>I hope you know how beautiful your eyes are, I love how your eyes sparkle. Your eyes are like stars that sparkles, I can't help stargazing in your eyes. I never want to stop staring at you, your eyes are beautiful, yet so vast.</p>
+            <p>I also want you to know how pretty your smile is. I love how your smile intertwine with your eyes. Your smile is so beautiful, I would always a find a way to make you smile. I also hope you know how warm your smile makes me feel. </p>
+            <p>I love how your dimples show up, whenever your smile and eyes intertwine. You're so beautiful, babi! Your dimples is also one of my favorites in your features, it really suits your smile.</p>
+            <div class="wax-seal">Seth</div>
+        </div>
+    </div>
+
+    <div class="letter-overlay" id="letter3">
+        <div class="letter-content">
+            <button class="close-letter" onclick="closeLetter()">×</button>
+            <h2>I'M SO PROUD OF YOU BABII!!!</h2>
+            <p>I'm super proud of you for doing your best to be okay. Know that I'm always here for you. I'm so proud of you waking up everyday and trying. I am so proud for every little thing that you try to accomplish. I'm always here for you, and will always be proud of your achievements. Every little battle that you overcome is an achievement, babi! and I'm here to assure you that you're heard and seen. I'm super proud of you, babi!</p>
+            <div class="wax-seal">Seth</div>
+        </div>
+    </div>
+
+    <script>
+        function openLetter(number) {
+            // Close any open letters first
+            closeLetter();
+            
+            // Animate the envelope
+            const envelope = event.currentTarget;
+            envelope.classList.add('active');
+            
+            // Show the corresponding letter
+            const letter = document.getElementById(`letter${number}`);
+            letter.classList.add('active');
+            
+            // Close envelope flap after a delay
+            setTimeout(() => {
+                envelope.classList.remove('active');
+            }, 1000);
+        }
+
+        function closeLetter() {
+            document.querySelectorAll('.letter-overlay').forEach(letter => {
+                letter.classList.remove('active');
+            });
+        }
+
+        // Close letter when clicking outside content
+        document.querySelectorAll('.letter-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    closeLetter();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

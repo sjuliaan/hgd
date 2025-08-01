@@ -1,0 +1,179 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+    background: linear-gradient(to bottom, #e0f7fa, #b2ebf2);
+    font-family: 'Arial', sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#flower-field {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.flower {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+    z-index: 2; /* Increased from 2 to 10 */
+}
+
+.flower:hover {
+    transform: scale(1.2);
+}
+
+#envelope {
+    position: absolute;
+    width: 80px;
+    height: 60px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23e91e63"><path d="M20,4H4C2.9,4,2,4.9,2,6v12c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V6C22,4.9,21.1,4,20,4z M20,8l-8,5L4,8V6l8,5l8-5V8z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    z-index: 0; /* Keep this low so it's behind flowers */
+    transition: transform 0.3s ease;
+    opacity: 0.8;
+    pointer-events: none; /* Disable direct clicks on envelope */
+}
+
+#envelope-overlay {
+    position: absolute;
+    width: 60px; /* Slightly larger than envelope */
+    height: 45px;
+    left: 60%; /* Match envelope position */
+    top: 65%;
+    transform: translate(-50%, -50%);
+    z-index: 100; /* Higher than flowers */
+    cursor: pointer;
+    opacity: 0; /* Completely invisible */
+}
+
+#envelope:hover {
+    transform: scale(1.2);
+    z-index: 50;
+    box-shadow: 0 0 10px 2px rgba(255, 105, 180, 0.5);
+}
+
+
+#letter-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+#letter {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23fff9c4"/><path d="M 10 10 L 20 20 M 30 10 L 40 20 M 50 10 L 60 20 M 70 10 L 80 20 M 90 10 L 95 15 M 10 30 L 20 40 M 30 30 L 40 40 M 50 30 L 60 40 M 70 30 L 80 40 M 90 30 L 95 35"/></svg>');
+    width: 100%;
+    max-width: 600px;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    color: #d81b60;
+    position: relative;
+}
+
+#letter h1 {
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    color: #c2185b;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#letter p {
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    line-height: 1.6;
+}
+
+.signature {
+    font-style: italic;
+    text-align: right;
+    margin-right: 50px;
+}
+
+#close-letter {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #f06292;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+#close-letter:hover {
+    background-color: #ec407a;
+    transform: scale(1.05);
+}
+
+.hidden {
+    display: none !important;
+}
+
+#instructions {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #ad1457;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+    z-index: 5;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
+}
+
+/* Flower animations */
+@keyframes sway {
+    0% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+    100% { transform: rotate(-5deg); }
+}
+
+.flower {
+    animation: sway 3s ease-in-out infinite;
+    animation-delay: calc(var(--delay) * 1s);
+}
